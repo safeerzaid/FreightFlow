@@ -22,4 +22,4 @@ Coming soon
 4. `npm run dev`
 
 ## 📁 Project Status
-🟡 In active development — Day 1 of 84
+🟡 currently working on backend
