@@ -12,7 +12,7 @@ const bcrypt = require('bcrypt')
     required: true,
     unique: true
   },
-cre
+
   phone: {
     type: String,
     required: true,
