@@ -22,6 +22,7 @@ const bcrypt = require('bcrypt')
   password: {
     type: String,
     required: true,
+    select: false
   },
 
   role: {

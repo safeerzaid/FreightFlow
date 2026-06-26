@@ -4,12 +4,11 @@ const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-
 // login
 router.post('/login', async(req,res) => {
   try {
     const {email,password} = req.body
-    const user = await User.findOne({email})
+    const user = await User.findOne({email}).select('+password')
 
     if(!user){
       return res.status(404).json({message: 'user not found'})
@@ -33,7 +32,7 @@ router.post('/login', async(req,res) => {
   }
 })
 
-router.post('/test-user', async(req,res) => {
+router.post('/register', async(req,res) => {
   try{
     const newUser = await User.create(req.body)
     res.status(201).json(newUser)
@@ -41,5 +40,4 @@ router.post('/test-user', async(req,res) => {
     res.status(400).json({message: error.message})
   }
 })
-
 module.exports = router;
