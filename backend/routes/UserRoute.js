@@ -1,6 +1,37 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/User')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+
+// login
+router.post('/login', async(req,res) => {
+  try {
+    const {email,password} = req.body
+    const user = await User.findOne({email})
+
+    if(!user){
+      return res.status(404).json({message: 'user not found'})
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+    
+    if(!isMatch){
+      return res.status(401).json({message: "Invalid Credentials"})
+    }
+
+    const token = jwt.sign(
+      {id: user.id, role: user.role},
+      process.env.JWT_SECRET,
+      {expiresIn: '7d'}
+    )
+    res.status(200).json({token, user})
+
+  } catch (error) {
+    res.status(500).json({error: error.message})
+  }
+})
 
 router.post('/test-user', async(req,res) => {
   try{
