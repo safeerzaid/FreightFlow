@@ -5,8 +5,11 @@ const connectDB = require('./config/db')
 const User =require('./models/User')
 const Driver = require('./models/Driver')
 const UserRoutes = require('./routes/UserRoute')
+const cors = require('cors')
+
 
 app.use(express.json())
+app.use(cors())
 app.use('/api/users', UserRoutes);
 connectDB()
 
