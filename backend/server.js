@@ -6,12 +6,17 @@ const User =require('./models/User')
 const Driver = require('./models/Driver')
 const UserRoutes = require('./routes/UserRoute')
 const cors = require('cors')
+const helmet = require('helmet')
+const morgan = require('morgan')
 
 
 app.use(express.json())
 app.use(cors())
+app.use(helmet())
+app.use(morgan("dev"))
 app.use('/api/users', UserRoutes);
 connectDB()
+
 
 const PORT = process.env.PORT || 3001
 
