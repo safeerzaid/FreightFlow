@@ -8,13 +8,14 @@ const UserRoutes = require('./routes/UserRoute')
 const cors = require('cors')
 const helmet = require('helmet')
 const morgan = require('morgan')
+const errorHandler = require('./middleware/errorHandler')
 
-
-app.use(express.json())
-app.use(cors())
 app.use(helmet())
+app.use(cors())
 app.use(morgan("dev"))
+app.use(express.json())
 app.use('/api/users', UserRoutes);
+app.use(errorHandler)
 connectDB()
 
 

@@ -3,9 +3,10 @@ const router = express.Router()
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const authMiddleware = require('../middleware/authMiddlware')
 
 // login
-router.post('/login', async(req,res) => {
+router.post('/login', async(req,res,next) => {
   try {
     const {email,password} = req.body
     const user = await User.findOne({email}).select('+password')
@@ -25,19 +26,27 @@ router.post('/login', async(req,res) => {
       process.env.JWT_SECRET,
       {expiresIn: '7d'}
     )
+    user.password = undefined
     res.status(200).json({token, user})
 
   } catch (error) {
-    res.status(500).json({error: error.message})
+    next(error)
   }
 })
 
-router.post('/register', async(req,res) => {
+router.post('/register', async(req,res,next) => {
   try{
-    const newUser = await User.create(req.body)
+    const { name, email, phone, password } = req.body
+    const newUser = await User.create({ name, email, phone, password })
+    newUser.password = undefined
     res.status(201).json(newUser)
   }catch (error){
-    res.status(400).json({message: error.message})
+    next(error)
   }
+})
+
+//profile
+router.get('/profile', authMiddleware, (req,res,next) => {
+  res.status(200).json({message: 'profile data', user:req.user})
 })
 module.exports = router;
